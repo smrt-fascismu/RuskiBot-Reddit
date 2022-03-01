@@ -1,8 +1,11 @@
+from re import search
 from os import getenv
+from time import sleep
+
 from pymysql import connect, Error
 
 from praw import Reddit
-from praw.exceptions import PRAWException
+from praw.exceptions import PRAWException, APIException
 
 SUBREDDIT = getenv('subreddit')
 
@@ -42,6 +45,16 @@ def authenticate():
         print(str(pr))
 
 
+def try_get_seconds_to_wait(ex_msg):
+    try:
+        msg = ex_msg.lower()
+        srch = search(r'\b(minutes)\b', msg)
+        minutes = int(msg[srch.start() - 2]) + 1
+        return minutes * 60
+    except:
+        return 60
+
+
 def process_submission(submission):
     conn, cursor = db_conn()
     if submission.id in SUBMISSION_ID:  # if the posts id is already in our database, ignore.
@@ -57,8 +70,12 @@ def process_submission(submission):
             conn.commit()  # commit the change
             print(f'Processed submission with id {submission.id}')
             return
-        except Exception as e:
+        except TypeError as e:
             print(str(e))
+        except APIException as er:
+            secs = try_get_seconds_to_wait(str(er))
+            print(f'Sleeping for {secs} minutes.')
+            sleep(secs)
 
 
 def main():
