@@ -25,7 +25,7 @@ def db_conn():
             SUBMISSION_ID.append(row[0])  # add the submission ids to the local variable
         return _conn, _cursor
     except Error as er:
-        exit(str(er))
+        print(str(er))
 
 
 # Authenticate with Reddit
@@ -39,7 +39,7 @@ def authenticate():
         reddit.validate_on_submit = True
         return reddit
     except PRAWException as pr:
-        exit(str(pr))
+        print(str(pr))
 
 
 def process_submission(submission):
@@ -58,7 +58,7 @@ def process_submission(submission):
             print(f'Processed submission with id {submission.id}')
             return
         except Exception as e:
-            exit(str(e))
+            print(str(e))
 
 
 def main():
