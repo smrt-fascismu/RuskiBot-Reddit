@@ -74,7 +74,7 @@ def process_submission(submission):
             print(str(e))
         except APIException as er:
             secs = try_get_seconds_to_wait(str(er))
-            print(f'Sleeping for {secs} minutes.')
+            print(f'Sleeping for {secs} seconds.')
             sleep(secs)
 
 
