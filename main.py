@@ -18,12 +18,14 @@ def db_conn():
     try:
         _conn = connect(user=getenv('db_user'), host=getenv('db_host'), port=int(getenv('db_port')),
                         password=getenv('db_password'), database=getenv('db'))
+        _conn.ping()
         # connect to the database. if it doesn't exist, automatically create.
         _cursor = _conn.cursor()
         _cursor.execute(
             'CREATE TABLE IF NOT EXISTS submissionTable(submissionID TEXT)')  # create tables if they dont exist
         _cursor.execute('SELECT submissionID from submissionTable')
         moredata = _cursor.fetchall()
+        _conn.close()
         for row in moredata:
             SUBMISSION_ID.append(row[0])  # add the submission ids to the local variable
         return _conn, _cursor
@@ -74,6 +76,7 @@ def process_submission(submission):
             print(str(e))
         except APIException as er:
             secs = try_get_seconds_to_wait(str(er))
+            
             print(f'Sleeping for {secs} seconds.')
             sleep(secs)
 
