@@ -61,8 +61,8 @@ def process_submission(submission):
         try:
             with CONN.get_conn() as cursor:
                 submission.downvote()
-                submission.reply('SLAVA UKRAINI 🇺🇦')
-                submission.report('Вам лгут. Сдавайтесь, пока вы еще можете \n You are being lied to. Give up while you still can. \n SLAVA UKRAINI')
+                submission.reply('Вам лгут. Сдавайтесь, пока вы еще можете \n You are being lied to. Give up while you still can. \n SLAVA UKRAINI')
+                submission.report('SLAVA UKRAINI 🇺🇦')
                 SUBMISSION_ID.append(submission.id)  # add the submission id to our variable
                 cursor.execute('INSERT INTO submissionTable VALUES (%s)', [submission.id])
                 print(f'Processed submission with id {submission.id}')
